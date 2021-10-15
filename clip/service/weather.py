@@ -32,8 +32,8 @@ class Weather:
     result['location'] = f'{observation.location.name} {observation.location.country}'
     return result
 
-  def forecast(self, location=None):
-    forecaster = self.manager.forecast_at_place(location or self.default_location)
+  def forecast(self, location=None, interval='3h'):
+    forecaster = self.manager.forecast_at_place(location or self.default_location, interval)
     location=f'{forecaster.forecast.location.name} {forecaster.forecast.location.country}'
 
     return [

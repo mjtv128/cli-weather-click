@@ -38,7 +38,17 @@ def is_around_midday(epoch):
 
 @cli.command()
 @click.pass_context
-def forecast(ctx, location=None, interval='3h'):
+def forecast(ctx, location=None):
   result = ctx.obj.weather.current(location=ctx.obj.location)
   to_display = [wx for wx in ctx.obj.weather.forecast(location=ctx.obj.location) if is_around_midday(wx["time"])]
 
+  def formatter(data):
+    if isinstance(data, float):
+      data = round(data, 2)
+    return str(data).center(14)
+
+  click.echo(f' {to_display[0]["location"]}'.center(int(14+5.5), "="))
+  click.echo('\U0001F4C5 Date: '+ ' '.join([formatter(convert_epoch_to(wx["time"], "%a %d %b"))for wx in to_display]))
+  click.echo('\U0001F525 Temp: '+ ''.join([formatter(wx["temp"])for wx in to_display]))
+  click.echo('\U0001F32A Wind: '+ ''.join([formatter(wx["wind"])for wx in to_display]))
+  click.echo('\U0001F4A7 Rain: '+ ''.join([formatter(wx["rain"])for wx in to_display]))
